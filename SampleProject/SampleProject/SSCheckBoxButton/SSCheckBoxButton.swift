@@ -12,8 +12,16 @@ import UIKit
 
     var tickLayer = CAShapeLayer()
     var backLayer = CAShapeLayer()
+    var insetEdge: CGFloat = 2
     var lineWidth: CGFloat = 2
-    var checkBoxWidth: CGFloat = 20
+    var tickLineWidth: CGFloat = 4
+    var animationDuration = 0.25
+
+    override var selected: Bool {
+        didSet {
+            self.updateState()
+        }
+    }
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -26,20 +34,56 @@ import UIKit
     }
 
     func initialize() {
-        backLayer.frame = rectForSquare()
-        backLayer.backgroundColor = UIColor.redColor().CGColor
+        var aRect = rectForSquare()
+        backLayer.frame = aRect
         backLayer.lineWidth = lineWidth
         backLayer.fillColor = UIColor.clearColor().CGColor
         backLayer.strokeColor = UIColor.blackColor().CGColor
         layer.addSublayer(backLayer)
         backLayer.path = UIBezierPath(roundedRect: rectForSquare(), cornerRadius: 1).CGPath
 
-//        self.titleEdgeInsets = UIEdgeInsetsMake(0, (2*circleRadius + 4*circleLayer.lineWidth), 0, 0)
+        self.titleEdgeInsets = UIEdgeInsetsMake(0, (aRect.size.width), 0, 0)
+        self.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        updateState()
+
 
     }
 
+    func pressed(button: UIButton) {
+        if self.selected {
+            self.selected = false
+        } else {
+            self.selected = true
+        }
+    }
+
+    func updateState() {
+        if selected {
+            var boundingRect = rectForSquare()
+            var path = UIBezierPath()
+            path.moveToPoint(CGPointMake(tickLineWidth + boundingRect.origin.x + (boundingRect.size.width*0.1), boundingRect.origin.y + boundingRect.size.height/2))
+            path.addLineToPoint(CGPointMake(boundingRect.origin.x + boundingRect.size.width/2, boundingRect.origin.y + (boundingRect.size.height * 0.9)))
+            path.addLineToPoint(CGPointMake(boundingRect.origin.x + (boundingRect.size.width * 1.2),
+            boundingRect.origin.y + boundingRect.size.height * 0.2))
+            tickLayer.fillColor = UIColor.clearColor().CGColor
+            tickLayer.path = path.CGPath
+            tickLayer.frame = bounds
+            tickLayer.strokeColor = UIColor.blackColor().CGColor
+            tickLayer.lineWidth = tickLineWidth
+            tickLayer.lineJoin = kCALineJoinBevel
+            layer.addSublayer(tickLayer)
+            var pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
+            pathAnimation.duration = animationDuration
+            pathAnimation.fromValue = NSNumber(float: 0.0)
+            pathAnimation.toValue = NSNumber(float: 1.0)
+            tickLayer.addAnimation(pathAnimation, forKey: "strokeEndAnimation")
+        } else {
+            tickLayer.removeFromSuperlayer()
+        }
+    }
+
     func rectForSquare() ->CGRect {
-        var rect = CGRectMake(lineWidth, lineWidth, checkBoxWidth, checkBoxWidth)
+        var rect = CGRectMake(insetEdge, insetEdge, (frame.size.width > frame.size.height ? frame.size.height : frame.size.width) - (4 * insetEdge) , (frame.size.width > frame.size.height ? frame.size.height : frame.size.width) - (4 * insetEdge))
         return rect
     }
     override func prepareForInterfaceBuilder() {
