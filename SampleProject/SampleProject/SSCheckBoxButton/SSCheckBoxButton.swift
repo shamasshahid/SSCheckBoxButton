@@ -10,11 +10,16 @@ import UIKit
 
 @IBDesignable class SSCheckBoxButton: UIButton {
 
-    var tickLayer = CAShapeLayer()
-    var backLayer = CAShapeLayer()
-    var insetEdge: CGFloat = 2
-    var lineWidth: CGFloat = 2
-    var tickLineWidth: CGFloat = 4
+    private var tickLayer = CAShapeLayer()
+    private var backLayer = CAShapeLayer()
+    @IBInspectable var checkBoxColor: UIColor = UIColor.redColor()
+    @IBInspectable var insetEdge: CGFloat = 2 {
+        didSet {
+            self.layoutIfNeeded()
+        }
+    }
+    @IBInspectable var lineWidth: CGFloat = 2
+    @IBInspectable var tickLineWidth: CGFloat = 4
     var animationDuration = 0.25
 
     override var selected: Bool {
@@ -33,20 +38,18 @@ import UIKit
         initialize()
     }
 
-    func initialize() {
+    private func initialize() {
         var aRect = rectForSquare()
         backLayer.frame = aRect
         backLayer.lineWidth = lineWidth
         backLayer.fillColor = UIColor.clearColor().CGColor
-        backLayer.strokeColor = UIColor.blackColor().CGColor
+        backLayer.strokeColor = checkBoxColor.CGColor
         layer.addSublayer(backLayer)
         backLayer.path = UIBezierPath(roundedRect: rectForSquare(), cornerRadius: 1).CGPath
 
         self.titleEdgeInsets = UIEdgeInsetsMake(0, (aRect.size.width), 0, 0)
         self.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchUpInside)
         updateState()
-
-
     }
 
     func pressed(button: UIButton) {
@@ -57,9 +60,13 @@ import UIKit
         }
     }
 
-    func updateState() {
+    private func updateState() {
         if selected {
             var boundingRect = rectForSquare()
+            backLayer.lineWidth = lineWidth
+            backLayer.path = UIBezierPath(roundedRect: boundingRect, cornerRadius: 1).CGPath
+            backLayer.frame = boundingRect
+            backLayer.strokeColor = checkBoxColor.CGColor
             var path = UIBezierPath()
             path.moveToPoint(CGPointMake(tickLineWidth + boundingRect.origin.x + (boundingRect.size.width*0.1), boundingRect.origin.y + boundingRect.size.height/2))
             path.addLineToPoint(CGPointMake(boundingRect.origin.x + boundingRect.size.width/2, boundingRect.origin.y + (boundingRect.size.height * 0.9)))
@@ -82,10 +89,11 @@ import UIKit
         }
     }
 
-    func rectForSquare() ->CGRect {
+    private func rectForSquare() ->CGRect {
         var rect = CGRectMake(insetEdge, insetEdge, (frame.size.width > frame.size.height ? frame.size.height : frame.size.width) - (4 * insetEdge) , (frame.size.width > frame.size.height ? frame.size.height : frame.size.width) - (4 * insetEdge))
         return rect
     }
+
     override func prepareForInterfaceBuilder() {
         initialize()
     }

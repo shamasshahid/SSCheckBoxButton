@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func didSelectButton(sender: AnyObject) {
-//        println("hello")
+        println("button selected")
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

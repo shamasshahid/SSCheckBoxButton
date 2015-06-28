@@ -23,9 +23,23 @@
                                     <constraint firstAttribute="height" constant="50" id="1IK-g1-cO2"/>
                                     <constraint firstAttribute="width" constant="150" id="Zhh-5D-WA1"/>
                                 </constraints>
-                                <state key="normal" title="My Bitan">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="My Button">
+                                    <color key="titleColor" red="0.29803921570000003" green="0.1450980392" blue="0.50980392159999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="insetEdge">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="tickLineWidth">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="checkBoxColor">
+                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="didSelectButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7RU-No-YMV"/>
                                 </connections>
